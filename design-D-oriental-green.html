@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网站暂停使用通知 · 城市生态环境效益智能管控平台</title>
+<!--
+  设计稿 D：东方青绿风
+  整体配色：宣纸米白 #f7f4ee / 青绿 #2c5f4f / 石青 #3a7d6e / 朱红 #b03a2e / 墨色 #26332e
+  字体选择：思源宋体 / 宋体族（标题），正文思源黑体；标题带衬线雅致感
+  背景虚化：10px 中度虚化 + 宣纸米白遮罩（约 86% 不透明度）+ 山形剪影装饰
+  文字排版：页面正中央，双居中；竖排侧饰 + 主文案 + 朱红印章 + 竖线分隔
+  整体视觉：中式美学、青绿山水、典雅隽永
+-->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: "Source Han Sans SC", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+    overflow: hidden;
+    background: #f7f4ee;
+    color: #26332e;
+  }
+
+  /* ===== 背景层：桂林山水 + 虚化 ===== */
+  .bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: url("assets/guilin_karst.jpg") center / cover no-repeat;
+    filter: blur(10px) saturate(1.12);
+    transform: scale(1.06);
+  }
+
+  /* 宣纸米白遮罩 */
+  .bg-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background:
+      radial-gradient(ellipse at 50% 40%, rgba(247, 244, 238, 0.94) 0%, rgba(240, 236, 226, 0.88) 55%, rgba(44, 95, 79, 0.62) 100%);
+  }
+
+  /* 宣纸纹理 */
+  .bg-texture {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    background:
+      radial-gradient(circle at 20% 24%, rgba(58, 125, 110, 0.10) 0%, transparent 44%),
+      radial-gradient(circle at 82% 80%, rgba(44, 95, 79, 0.12) 0%, transparent 46%);
+    pointer-events: none;
+  }
+
+  /* 外框：双细线（中式册页感） */
+  .frame {
+    position: fixed;
+    inset: clamp(12px, 2.2vw, 28px);
+    z-index: 3;
+    border: 1px solid rgba(44, 95, 79, 0.34);
+    pointer-events: none;
+  }
+
+  .frame::after {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border: 1px solid rgba(44, 95, 79, 0.18);
+  }
+
+  /* ===== 中央内容区 ===== */
+  .notice {
+    position: relative;
+    z-index: 10;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: clamp(5vh, 8vh, 10vh) 7vw;
+    gap: clamp(14px, 2.4vh, 28px);
+  }
+
+  /* 顶部：小横饰 + 平台名 */
+  .platform-line {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: #3a7d6e;
+    font-size: clamp(12px, 1.5vw, 17px);
+    letter-spacing: clamp(3px, 0.7vw, 7px);
+    font-weight: 500;
+  }
+
+  .platform-line .ornament {
+    width: clamp(30px, 4.5vw, 58px);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #3a7d6e, transparent);
+  }
+
+  .platform-line .diamond {
+    width: 7px;
+    height: 7px;
+    background: #3a7d6e;
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  /* 主文案 */
+  .headline {
+    color: #26332e;
+    font-family: "Source Han Serif SC", "STSong", "SimSun", serif;
+    font-size: clamp(30px, 6.2vw, 78px);
+    font-weight: 700;
+    line-height: 1.38;
+    letter-spacing: clamp(3px, 0.7vw, 9px);
+    text-shadow: 0 2px 16px rgba(255, 255, 255, 0.75);
+  }
+
+  .headline .line-1 {
+    display: block;
+    color: #2c5f4f;
+    font-size: 0.6em;
+    font-weight: 600;
+    letter-spacing: clamp(6px, 1.3vw, 16px);
+    margin-bottom: clamp(8px, 1.2vh, 18px);
+    opacity: 0.92;
+  }
+
+  /* 朱红印章 */
+  .seal {
+    width: clamp(52px, 8vw, 84px);
+    height: clamp(52px, 8vw, 84px);
+    background: #b03a2e;
+    color: #f7f4ee;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Source Han Serif SC", "STSong", "SimSun", serif;
+    font-size: clamp(15px, 2.2vw, 24px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    line-height: 1.35;
+    box-shadow: 0 6px 22px rgba(176, 58, 46, 0.32);
+    padding: 6px;
+    text-align: center;
+  }
+
+  /* 辅助说明 */
+  .sub-text {
+    color: #3d554b;
+    font-size: clamp(13px, 1.8vw, 20px);
+    line-height: 2.1;
+    letter-spacing: 2px;
+    max-width: 36em;
+  }
+
+  .sub-text .em {
+    color: #b03a2e;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(176, 58, 46, 0.38);
+    padding-bottom: 2px;
+  }
+
+  /* 底部 */
+  .footnote {
+    color: #5c7267;
+    font-size: clamp(11px, 1.4vw, 15px);
+    letter-spacing: 2.5px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .footnote .ornament {
+    width: clamp(26px, 4vw, 48px);
+    height: 1px;
+    background: rgba(44, 95, 79, 0.45);
+  }
+
+  /* ===== 响应式 ===== */
+  @media (max-width: 768px) {
+    .notice { padding: 6vh 7vw; gap: clamp(12px, 2vh, 22px); }
+    .frame { inset: 10px; }
+    .headline { letter-spacing: 2px; }
+    .sub-text { line-height: 1.95; }
+  }
+
+  @media (max-width: 480px) {
+    .headline { font-size: clamp(22px, 7.2vw, 32px); letter-spacing: 1px; }
+    .headline .line-1 { font-size: 0.64em; letter-spacing: 4px; margin-bottom: 6px; }
+    .sub-text { font-size: 12.5px; letter-spacing: 1px; line-height: 1.9; }
+    .platform-line { font-size: 11px; letter-spacing: 2px; }
+    .seal { width: 50px; height: 50px; font-size: 14px; border-radius: 6px; }
+    .bg-layer { filter: blur(8px) saturate(1.1); }
+    .footnote { font-size: 10.5px; letter-spacing: 1px; }
+  }
+
+  @media (max-height: 520px) and (orientation: landscape) {
+    .notice { gap: 10px; padding: 3vh 8vw; }
+    .headline { font-size: clamp(20px, 4.4vw, 38px); }
+    .headline .line-1 { font-size: 0.56em; margin-bottom: 4px; }
+    .sub-text { font-size: clamp(11px, 1.6vw, 15px); line-height: 1.6; }
+    .seal { width: 42px; height: 42px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 背景虚化层 -->
+<div class="bg-layer"></div>
+<div class="bg-mask"></div>
+<div class="bg-texture"></div>
+<div class="frame"></div>
+
+<!-- 中央通知内容 -->
+<main class="notice" role="main">
+
+  <!-- 顶部横饰 + 平台名 -->
+  <div class="platform-line">
+    <span class="ornament"></span>
+    <span class="diamond"></span>
+    <span>城市生态环境效益智能管控平台</span>
+    <span class="diamond"></span>
+    <span class="ornament"></span>
+  </div>
+
+  <!-- 主文案 -->
+  <h1 class="headline">
+    <span class="line-1">接相关要求</span>
+    进博会期间网站暂停使用
+  </h1>
+
+  <!-- 朱红印章 -->
+  <div class="seal">暂停<br>服务</div>
+
+  <!-- 辅助说明 -->
+  <p class="sub-text">
+    为配合<span class="em">中国国际进口博览会</span>相关工作安排<br>
+    本网站将暂停对外服务，恢复时间另行通知
+  </p>
+
+  <!-- 底部 -->
+  <div class="footnote">
+    <span class="ornament"></span>
+    <span>给您带来的不便，敬请谅解</span>
+    <span class="ornament"></span>
+  </div>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>进博会暂停页 · 5 套设计稿总览</title>
+<!--
+  设计稿总览页：内嵌 5 套设计稿实时预览 + 设计说明
+  支持桌面 / 手机视图切换，验证响应式表现
+-->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "Source Han Sans SC", "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #f0f2f5;
+    color: #2c3e50;
+    line-height: 1.6;
+  }
+
+  /* ===== 顶部 ===== */
+  .page-header {
+    background: linear-gradient(135deg, #1a4731 0%, #2c5f4f 55%, #14213d 100%);
+    color: #fff;
+    padding: 38px 6vw 32px;
+  }
+
+  .page-header h1 {
+    font-size: clamp(22px, 3.4vw, 34px);
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+
+  .page-header p {
+    font-size: clamp(13px, 1.7vw, 16px);
+    opacity: 0.88;
+    letter-spacing: 1px;
+    max-width: 62em;
+  }
+
+  .page-header .core-copy {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 8px 20px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 6px;
+    font-size: clamp(13px, 1.8vw, 17px);
+    letter-spacing: 2px;
+    font-weight: 600;
+    color: #e8c978;
+  }
+
+  /* ===== 视图切换工具条 ===== */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid #e2e6ea;
+    padding: 12px 6vw;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .toolbar .label {
+    font-size: 13px;
+    color: #6b7a88;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  .view-btns {
+    display: flex;
+    gap: 8px;
+  }
+
+  .view-btn {
+    padding: 7px 18px;
+    border: 1px solid #cfd8de;
+    background: #fff;
+    color: #4a5a68;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .view-btn:hover { border-color: #2c5f4f; color: #2c5f4f; }
+
+  .view-btn.active {
+    background: #2c5f4f;
+    border-color: #2c5f4f;
+    color: #fff;
+  }
+
+  .toolbar .jump-links {
+    margin-left: auto;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .jump-links a {
+    padding: 5px 12px;
+    border-radius: 100px;
+    background: #eef2f0;
+    color: #2c5f4f;
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+
+  .jump-links a:hover { background: #2c5f4f; color: #fff; }
+
+  /* ===== 设计稿区块 ===== */
+  .design-section {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 36px 6vw;
+  }
+
+  .design-section + .design-section {
+    border-top: 1px solid #e2e6ea;
+  }
+
+  .design-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+
+  .design-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 19px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  .design-head h2 {
+    font-size: clamp(19px, 2.6vw, 26px);
+    font-weight: 800;
+    letter-spacing: 1px;
+  }
+
+  .design-head .style-tag {
+    padding: 5px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    border: 1px solid;
+  }
+
+  /* 说明 + 预览布局 */
+  .design-body {
+    display: grid;
+    grid-template-columns: minmax(300px, 2fr) minmax(360px, 3fr);
+    gap: 28px;
+    align-items: start;
+  }
+
+  /* 设计说明卡 */
+  .spec-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px 26px;
+    box-shadow: 0 3px 16px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e8ecef;
+  }
+
+  .spec-item {
+    padding: 12px 0;
+    border-bottom: 1px dashed #e4e9ed;
+  }
+
+  .spec-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .spec-item .spec-label {
+    font-size: 12px;
+    color: #7a8a98;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .spec-item .spec-value {
+    font-size: 14px;
+    color: #2c3e50;
+    line-height: 1.8;
+  }
+
+  /* 色板 */
+  .swatches {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .swatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .swatch .color {
+    width: 46px;
+    height: 46px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .swatch .hex {
+    font-size: 10px;
+    color: #8a97a3;
+    letter-spacing: 0.5px;
+  }
+
+  /* 预览区 */
+  .preview-wrap {
+    background: #e8ecef;
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    border: 1px solid #dde2e6;
+    min-height: 300px;
+  }
+
+  .device-frame {
+    background: #222;
+    border-radius: 14px;
+    padding: 10px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22);
+    width: 100%;
+    transition: max-width 0.35s ease;
+    max-width: 100%;
+  }
+
+  .device-frame.desktop { max-width: 100%; }
+  .device-frame.tablet { max-width: 620px; }
+  .device-frame.mobile { max-width: 375px; }
+
+  .device-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 6px 10px;
+  }
+
+  .device-bar .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #4a4a4a;
+  }
+
+  .device-bar .dot:nth-child(1) { background: #ff5f57; }
+  .device-bar .dot:nth-child(2) { background: #ffbd2e; }
+  .device-bar .dot:nth-child(3) { background: #28c840; }
+
+  .device-bar .url {
+    margin-left: 10px;
+    flex: 1;
+    background: #333;
+    border-radius: 5px;
+    padding: 3px 12px;
+    color: #999;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .device-frame iframe {
+    width: 100%;
+    border: none;
+    border-radius: 6px;
+    background: #fff;
+    display: block;
+    height: 520px;
+  }
+
+  .device-frame.mobile iframe { height: 640px; }
+  .device-frame.tablet iframe { height: 560px; }
+
+  /* 页脚 */
+  .page-footer {
+    background: #1a4731;
+    color: rgba(255, 255, 255, 0.82);
+    padding: 26px 6vw;
+    font-size: 13px;
+    letter-spacing: 1px;
+    line-height: 2;
+    text-align: center;
+  }
+
+  .page-footer strong { color: #e8c978; }
+
+  /* ===== 响应式 ===== */
+  @media (max-width: 1080px) {
+    .design-body {
+      grid-template-columns: 1fr;
+    }
+    .preview-wrap { min-height: auto; }
+  }
+
+  @media (max-width: 640px) {
+    .toolbar { gap: 10px; padding: 10px 5vw; }
+    .toolbar .jump-links { display: none; }
+    .design-section { padding: 26px 5vw; }
+    .preview-wrap { padding: 12px; }
+    .device-frame iframe { height: 420px; }
+    .device-frame.mobile iframe { height: 560px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 顶部 -->
+<header class="page-header">
+  <h1>进博会期间网站暂停页 · 设计稿总览</h1>
+  <p>城市生态环境效益智能管控平台 —— 共 5 套风格各异的设计方案，每套均含中央醒目文案、背景虚化处理与响应式适配。点击下方按钮切换桌面 / 平板 / 手机视图，验证不同屏幕尺寸下的展示效果。</p>
+  <div class="core-copy">核心文案：接相关要求，进博会期间网站暂停使用</div>
+</header>
+
+<!-- 工具条 -->
+<div class="toolbar">
+  <span class="label">预览尺寸：</span>
+  <div class="view-btns">
+    <button class="view-btn active" data-view="desktop">桌面端</button>
+    <button class="view-btn" data-view="tablet">平板端</button>
+    <button class="view-btn" data-view="mobile">手机端</button>
+  </div>
+  <div class="jump-links">
+    <a href="#design-a">A 生态绿意</a>
+    <a href="#design-b">B 科技深蓝</a>
+    <a href="#design-c">C 政务庄重</a>
+    <a href="#design-d">D 东方青绿</a>
+    <a href="#design-e">E 进博蓝金</a>
+  </div>
+</div>
+
+<!-- ========== 方案 A ========== -->
+<section class="design-section" id="design-a">
+  <div class="design-head">
+    <div class="design-badge" style="background: linear-gradient(135deg, #2e7d5b, #1a4731);">A</div>
+    <h2>生态绿意风</h2>
+    <span class="style-tag" style="color: #2e7d5b; border-color: #2e7d5b; background: #eaf5ee;">清新自然 · 生态环保</span>
+  </div>
+  <div class="design-body">
+    <div class="spec-card">
+      <div class="spec-item">
+        <div class="spec-label">整体配色</div>
+        <div class="spec-value">墨绿为主、芽绿点缀、米白打底，自然清新</div>
+        <div class="swatches">
+          <div class="swatch"><div class="color" style="background:#1a4731;"></div><div class="hex">#1a4731</div></div>
+          <div class="swatch"><div class="color" style="background:#2e7d5b;"></div><div class="hex">#2e7d5b</div></div>
+          <div class="swatch"><div class="color" style="background:#a8d5ba;"></div><div class="hex">#a8d5ba</div></div>
+          <div class="swatch"><div class="color" style="background:#f4faf6;"></div><div class="hex">#f4faf6</div></div>
+        </div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">字体选择</div>
+        <div class="spec-value">思源黑体 / 微软雅黑；标题 800 字重，副题 700，正文 400；标题字距 2-6px</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">背景虚化程度</div>
+        <div class="spec-value">高斯模糊 12px（移动端 9px）+ 绿色径向渐变遮罩约 82% 不透明度，背景为公园绿化航拍图，仅保留色块层次</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">文字排版位置</div>
+        <div class="spec-value">页面正中央双居中；自上而下：平台标识胶囊 → 主文案双行（“接相关要求”小字引导 + 主句大字）→ 绿色分隔线 → 辅助说明双行 → 底部双段致谢</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">整体视觉风格</div>
+        <div class="spec-value">清新自然、生态亲和。适合强调绿色低碳、园林生态属性的平台调性，观感柔和不生硬</div>
+      </div>
+    </div>
+    <div class="preview-wrap">
+      <div class="device-frame desktop">
+        <div class="device-bar">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="url">design-A-eco-green.html</div>
+        </div>
+        <iframe src="design-A-eco-green.html" title="方案A预览" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 方案 B ========== -->
+<section class="design-section" id="design-b">
+  <div class="design-head">
+    <div class="design-badge" style="background: linear-gradient(135deg, #4fd1c5, #12294a);">B</div>
+    <h2>科技深蓝风</h2>
+    <span class="style-tag" style="color: #2c5f7a; border-color: #4fd1c5; background: #e6f7f6;">智慧城市 · 数据大屏</span>
+  </div>
+  <div class="design-body">
+    <div class="spec-card">
+      <div class="spec-item">
+        <div class="spec-label">整体配色</div>
+        <div class="spec-value">深海蓝为底、青色高亮、纯白文字，科技冷调</div>
+        <div class="swatches">
+          <div class="swatch"><div class="color" style="background:#0a1628;"></div><div class="hex">#0a1628</div></div>
+          <div class="swatch"><div class="color" style="background:#12294a;"></div><div class="hex">#12294a</div></div>
+          <div class="swatch"><div class="color" style="background:#4fd1c5;"></div><div class="hex">#4fd1c5</div></div>
+          <div class="swatch"><div class="color" style="background:#ffffff; border-color:#ccc;"></div><div class="hex">#ffffff</div></div>
+        </div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">字体选择</div>
+        <div class="spec-value">思源黑体 / 微软雅黑；标题 800 字重 + 青色光晕描边；标签文字加 4px 字距营造科技感</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">背景虚化程度</div>
+        <div class="spec-value">高斯模糊 16px（移动端 11px）+ 深蓝渐变遮罩约 80% 不透明度，叠加 56px 科技网格线与角落光晕，背景为未来城市夜景</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">文字排版位置</div>
+        <div class="spec-value">页面正中央双居中；主文案置于青色描边毛玻璃卡片容器内（四角装饰线），上方 SYSTEM NOTICE 状态标签带呼吸灯，下方青色分隔线 + 说明文字 + 底部信息条</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">整体视觉风格</div>
+        <div class="spec-value">智慧城市、数据大屏风。突出平台的技术与信息化属性，适合科技感强的展示场景</div>
+      </div>
+    </div>
+    <div class="preview-wrap">
+      <div class="device-frame desktop">
+        <div class="device-bar">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="url">design-B-tech-blue.html</div>
+        </div>
+        <iframe src="design-B-tech-blue.html" title="方案B预览" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 方案 C ========== -->
+<section class="design-section" id="design-c">
+  <div class="design-head">
+    <div class="design-badge" style="background: linear-gradient(135deg, #d4af37, #14213d);">C</div>
+    <h2>政务庄重风</h2>
+    <span class="style-tag" style="color: #8a6d1e; border-color: #d4af37; background: #faf5e6;">政务公告 · 正式权威</span>
+  </div>
+  <div class="design-body">
+    <div class="spec-card">
+      <div class="spec-item">
+        <div class="spec-label">整体配色</div>
+        <div class="spec-value">深藏青为底、金色描边、红色点缀、纯白文字，正式稳重</div>
+        <div class="swatches">
+          <div class="swatch"><div class="color" style="background:#14213d;"></div><div class="hex">#14213d</div></div>
+          <div class="swatch"><div class="color" style="background:#1d3557;"></div><div class="hex">#1d3557</div></div>
+          <div class="swatch"><div class="color" style="background:#d4af37;"></div><div class="hex">#d4af37</div></div>
+          <div class="swatch"><div class="color" style="background:#c53929;"></div><div class="hex">#c53929</div></div>
+        </div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">字体选择</div>
+        <div class="spec-value">思源黑体 / 微软雅黑；标题 800 字重，标题引导语金色；整体字距偏大（2-8px），政务公文排印感</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">背景虚化程度</div>
+        <div class="spec-value">高斯模糊 20px（移动端 14px，五套中最重）+ 深藏青遮罩约 88% 不透明度 + 金色横向细线纹理 + 页面外框双角装饰线，背景为城市航拍图</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">文字排版位置</div>
+        <div class="spec-value">页面正中央双居中；顶部红金双色横饰 + 平台名 → 主文案双行 → 金红双线分隔（政务红头线式）→ 说明文字 → 落款式底部（短细线 + 致谢语）</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">整体视觉风格</div>
+        <div class="spec-value">政务公告、正式权威。红头金线的公文视觉语言，适合政府背景或需要庄重感的场合</div>
+      </div>
+    </div>
+    <div class="preview-wrap">
+      <div class="device-frame desktop">
+        <div class="device-bar">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="url">design-C-gov-solemn.html</div>
+        </div>
+        <iframe src="design-C-gov-solemn.html" title="方案C预览" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 方案 D ========== -->
+<section class="design-section" id="design-d">
+  <div class="design-head">
+    <div class="design-badge" style="background: linear-gradient(135deg, #b03a2e, #2c5f4f);">D</div>
+    <h2>东方青绿风</h2>
+    <span class="style-tag" style="color: #2c5f4f; border-color: #2c5f4f; background: #eef3f0;">中式美学 · 典雅隽永</span>
+  </div>
+  <div class="design-body">
+    <div class="spec-card">
+      <div class="spec-item">
+        <div class="spec-label">整体配色</div>
+        <div class="spec-value">宣纸米白为底、青绿主调、朱红印章点缀，传统雅致</div>
+        <div class="swatches">
+          <div class="swatch"><div class="color" style="background:#f7f4ee;"></div><div class="hex">#f7f4ee</div></div>
+          <div class="swatch"><div class="color" style="background:#2c5f4f;"></div><div class="hex">#2c5f4f</div></div>
+          <div class="swatch"><div class="color" style="background:#3a7d6e;"></div><div class="hex">#3a7d6e</div></div>
+          <div class="swatch"><div class="color" style="background:#b03a2e;"></div><div class="hex">#b03a2e</div></div>
+        </div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">字体选择</div>
+        <div class="spec-value">思源宋体 / 宋体族（标题衬线字体），正文思源黑体；标题字距 3-9px，书法留白韵味</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">背景虚化程度</div>
+        <div class="spec-value">高斯模糊 10px（移动端 8px，五套中最轻）+ 米白径向遮罩约 88% 不透明度，背景为桂林青绿山水，保留山形轮廓意境 + 双细线册页外框</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">文字排版位置</div>
+        <div class="spec-value">页面正中央双居中；菱形横饰 + 平台名 → 主文案双行（宋体）→ 朱红方印（“暂停服务”）→ 说明文字 → 底部对称装饰线 + 致谢语</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">整体视觉风格</div>
+        <div class="spec-value">中式美学、青绿山水。呼应生态环境主题的文化底蕴，雅致有辨识度</div>
+      </div>
+    </div>
+    <div class="preview-wrap">
+      <div class="device-frame desktop">
+        <div class="device-bar">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="url">design-D-oriental-green.html</div>
+        </div>
+        <iframe src="design-D-oriental-green.html" title="方案D预览" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 方案 E ========== -->
+<section class="design-section" id="design-e">
+  <div class="design-head">
+    <div class="design-badge" style="background: linear-gradient(135deg, #e8c170, #1b2a4a);">E</div>
+    <h2>进博蓝金风</h2>
+    <span class="style-tag" style="color: #8a6d1e; border-color: #e8c170; background: #faf5e8;">国际会展 · 庄重大气</span>
+  </div>
+  <div class="design-body">
+    <div class="spec-card">
+      <div class="spec-item">
+        <div class="spec-label">整体配色</div>
+        <div class="spec-value">深蓝紫为底、香槟金高亮、暖白文字，会展国际范</div>
+        <div class="swatches">
+          <div class="swatch"><div class="color" style="background:#1b2a4a;"></div><div class="hex">#1b2a4a</div></div>
+          <div class="swatch"><div class="color" style="background:#2c3e6b;"></div><div class="hex">#2c3e6b</div></div>
+          <div class="swatch"><div class="color" style="background:#e8c170;"></div><div class="hex">#e8c170</div></div>
+          <div class="swatch"><div class="color" style="background:#f5f0e6;"></div><div class="hex">#f5f0e6</div></div>
+        </div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">字体选择</div>
+        <div class="spec-value">思源黑体 / 微软雅黑；标题 900 超粗字重（五套中字号最大），引导语金色大字距（6-18px）</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">背景虚化程度</div>
+        <div class="spec-value">高斯模糊 14px（移动端 10px）+ 蓝紫渐变遮罩约 84% 不透明度 + 金色光晕纹理，背景为上海暮色天际线</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">文字排版位置</div>
+        <div class="spec-value">页面正中央双居中；金色星形徽标胶囊（平台名）→ 菱形点装饰金线 → 主文案双行（全幅最大字）→ 说明文字 → 第二条金线 → 底部菱形点分隔致谢语</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">整体视觉风格</div>
+        <div class="spec-value">国际会展、庄重大气。金色点缀呼应进博会仪式感，冲击力最强，适合对外展示场合</div>
+      </div>
+    </div>
+    <div class="preview-wrap">
+      <div class="device-frame desktop">
+        <div class="device-bar">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="url">design-E-expo-gold.html</div>
+        </div>
+        <iframe src="design-E-expo-gold.html" title="方案E预览" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 页脚 -->
+<footer class="page-footer">
+  <strong>适配说明：</strong>5 套设计稿均采用流式排版（clamp 字号 + 弹性间距），覆盖桌面、平板、手机三种视口；
+  短横屏（车机/平板横放）另做专项排版。文案在任意尺寸下均保持页面正中央醒目展示。
+</footer>
+
+<script>
+  // 视图切换
+  const btns = document.querySelectorAll('.view-btn');
+  const frames = document.querySelectorAll('.device-frame');
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const view = btn.dataset.view;
+      frames.forEach(f => {
+        f.classList.remove('desktop', 'tablet', 'mobile');
+        f.classList.add(view);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

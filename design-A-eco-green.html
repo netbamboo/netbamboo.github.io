@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网站暂停使用通知 · 城市生态环境效益智能管控平台</title>
+<!--
+  设计稿 A：生态绿意风
+  整体配色：墨绿 #1a4731 / 苔绿 #2e7d5b / 浅芽绿 #a8d5ba / 米白底 #f4faf6
+  字体选择：微软雅黑 / 思源黑体，标题 800 字重，正文 400
+  背景虚化：12px 高斯模糊 + 半透明绿色渐变遮罩（约 82% 不透明度）
+  文字排版：页面正中央，垂直水平双居中，标题双行，辅助信息上下分层
+  整体视觉：清新自然、生态环保、亲和稳重
+-->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: "Source Han Sans SC", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+    overflow: hidden;
+    background: #f4faf6;
+  }
+
+  /* ===== 背景层：生态绿化航拍图 + 虚化处理 ===== */
+  .bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: url("assets/park_aerial.jpg") center / cover no-repeat;
+    filter: blur(12px) saturate(1.15);
+    transform: scale(1.06);
+  }
+
+  /* 遮罩：绿色渐变叠加，强化文字可读性 */
+  .bg-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background:
+      radial-gradient(ellipse at 50% 45%, rgba(244, 250, 246, 0.88) 0%, rgba(233, 245, 236, 0.80) 55%, rgba(46, 125, 91, 0.72) 100%);
+  }
+
+  /* 微光纹理，增加层次 */
+  .bg-texture {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    background:
+      radial-gradient(circle at 18% 22%, rgba(168, 213, 186, 0.35) 0%, transparent 42%),
+      radial-gradient(circle at 84% 78%, rgba(46, 125, 91, 0.28) 0%, transparent 46%);
+    pointer-events: none;
+  }
+
+  /* ===== 中央内容区 ===== */
+  .notice {
+    position: relative;
+    z-index: 10;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4vh 6vw;
+    gap: clamp(14px, 2.4vh, 28px);
+  }
+
+  /* 顶部：平台标识 */
+  .platform-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 26px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(46, 125, 91, 0.30);
+    border-radius: 100px;
+    color: #2e7d5b;
+    font-size: clamp(13px, 1.6vw, 17px);
+    letter-spacing: 2px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .platform-tag .leaf-icon {
+    width: clamp(18px, 2vw, 24px);
+    height: clamp(18px, 2vw, 24px);
+    fill: #2e7d5b;
+    flex-shrink: 0;
+  }
+
+  /* 主标题 */
+  .headline {
+    color: #143826;
+    font-size: clamp(30px, 6.2vw, 78px);
+    font-weight: 800;
+    line-height: 1.28;
+    letter-spacing: clamp(2px, 0.5vw, 6px);
+    text-shadow: 0 2px 18px rgba(255, 255, 255, 0.85);
+    max-width: 18em;
+  }
+
+  .headline .line-1 {
+    display: block;
+    color: #2e7d5b;
+    font-size: 0.62em;
+    font-weight: 700;
+    letter-spacing: clamp(6px, 1.2vw, 14px);
+    margin-bottom: clamp(6px, 1vh, 14px);
+    opacity: 0.92;
+  }
+
+  /* 装饰分隔线 */
+  .divider {
+    width: clamp(80px, 14vw, 190px);
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #2e7d5b, transparent);
+    border-radius: 3px;
+  }
+
+  /* 辅助说明 */
+  .sub-text {
+    color: #2b5241;
+    font-size: clamp(14px, 2vw, 22px);
+    line-height: 1.9;
+    letter-spacing: 1px;
+    max-width: 34em;
+  }
+
+  .sub-text .em {
+    color: #1a4731;
+    font-weight: 700;
+    border-bottom: 2px solid rgba(46, 125, 91, 0.45);
+    padding-bottom: 2px;
+  }
+
+  /* 底部：恢复提示 */
+  .footnote {
+    color: #3d6b54;
+    font-size: clamp(12px, 1.5vw, 16px);
+    letter-spacing: 1.5px;
+    opacity: 0.92;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .footnote .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #2e7d5b;
+    opacity: 0.7;
+  }
+
+  /* ===== 响应式 ===== */
+  @media (max-width: 768px) {
+    .notice { padding: 6vh 7vw; gap: clamp(12px, 2vh, 20px); }
+    .platform-tag { padding: 8px 18px; letter-spacing: 1px; }
+    .headline { letter-spacing: 1px; }
+    .sub-text { line-height: 1.85; }
+  }
+
+  @media (max-width: 480px) {
+    .headline { font-size: clamp(24px, 7.4vw, 34px); }
+    .headline .line-1 { font-size: 0.66em; letter-spacing: 3px; }
+    .sub-text { font-size: 13.5px; }
+    .footnote { flex-direction: column; gap: 4px; }
+    .footnote .dot { display: none; }
+    .bg-layer { filter: blur(9px) saturate(1.1); }
+    .bg-mask {
+      background: radial-gradient(ellipse at 50% 42%, rgba(244, 250, 246, 0.92) 0%, rgba(233, 245, 236, 0.86) 58%, rgba(46, 125, 91, 0.70) 100%);
+    }
+  }
+
+  @media (max-height: 520px) and (orientation: landscape) {
+    .notice { gap: 10px; padding: 3vh 6vw; }
+    .headline { font-size: clamp(22px, 4.4vw, 40px); }
+    .sub-text { font-size: clamp(12px, 1.7vw, 17px); line-height: 1.6; }
+    .platform-tag { padding: 6px 16px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 背景虚化层 -->
+<div class="bg-layer"></div>
+<div class="bg-mask"></div>
+<div class="bg-texture"></div>
+
+<!-- 中央通知内容 -->
+<main class="notice" role="main">
+
+  <!-- 平台标识 -->
+  <div class="platform-tag">
+    <svg class="leaf-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 2C7 2 3 6 3 11c0 4.5 3 8 7 9.5.5-.8 1-2 1.2-3.3-3.4-.6-6.2-3.6-6.2-7.2 0-4.4 3-8 7-8 1 0 2 .2 2.9.6C15.7 4.4 14 2 12 2zm5.7 3.6c-2.2-.6-4.6 0-6.3 1.5 3.6.2 6.5 3.2 6.7 6.8 0 .6 0 1.2-.1 1.7 2.3-1.7 3.7-4.3 3.7-7 0-1.5-.5-2.9-1.4-4-1-.6-2-1-2.6-1z"/>
+    </svg>
+    <span>城市生态环境效益智能管控平台</span>
+  </div>
+
+  <!-- 主文案 -->
+  <h1 class="headline">
+    <span class="line-1">接相关要求</span>
+    进博会期间网站暂停使用
+  </h1>
+
+  <div class="divider"></div>
+
+  <!-- 辅助信息 -->
+  <p class="sub-text">
+    为配合<span class="em">中国国际进口博览会</span>相关工作安排<br>
+    本网站将暂停对外服务，恢复时间另行通知
+  </p>
+
+  <!-- 底部提示 -->
+  <div class="footnote">
+    <span>给您带来的不便，敬请谅解</span>
+    <span class="dot"></span>
+    <span>感谢您的理解与支持</span>
+  </div>
+
+</main>
+
+</body>
+</html>

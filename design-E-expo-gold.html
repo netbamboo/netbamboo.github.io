@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网站暂停使用通知 · 城市生态环境效益智能管控平台</title>
+<!--
+  设计稿 E：进博蓝金风
+  整体配色：深蓝紫 #1b2a4a / 靛蓝 #2c3e6b / 香槟金 #e8c170 / 暖白 #f5f0e6
+  字体选择：微软雅黑 / 思源黑体，标题 900 超粗字重（最大字号方案）
+  背景虚化：14px 中度虚化 + 蓝紫渐变遮罩（约 84% 不透明度）+ 金色光线纹理
+  文字排版：页面正中央，双居中；主文案全幅大字 + 上下金色分隔线 + 底部日期感标注
+  整体视觉：国际范、庄重大气、会展氛围
+-->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: "Source Han Sans SC", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+    overflow: hidden;
+    background: #1b2a4a;
+    color: #ffffff;
+  }
+
+  /* ===== 背景层：上海暮色 + 虚化 ===== */
+  .bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: url("assets/shanghai_twilight.jpg") center / cover no-repeat;
+    filter: blur(14px) saturate(1.05) brightness(0.78);
+    transform: scale(1.07);
+  }
+
+  /* 蓝紫渐变遮罩 */
+  .bg-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background:
+      linear-gradient(155deg, rgba(27, 42, 74, 0.90) 0%, rgba(44, 62, 107, 0.82) 50%, rgba(27, 42, 74, 0.93) 100%);
+  }
+
+  /* 金色光线纹理 */
+  .bg-rays {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(232, 193, 112, 0.14) 0%, transparent 52%),
+      radial-gradient(ellipse at 20% 100%, rgba(232, 193, 112, 0.08) 0%, transparent 46%),
+      radial-gradient(ellipse at 80% 100%, rgba(122, 162, 247, 0.12) 0%, transparent 48%);
+    pointer-events: none;
+  }
+
+  /* ===== 中央内容区 ===== */
+  .notice {
+    position: relative;
+    z-index: 10;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: clamp(5vh, 8vh, 10vh) 6vw;
+    gap: clamp(16px, 2.8vh, 32px);
+  }
+
+  /* 顶部：金色徽标条 */
+  .expo-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px clamp(22px, 3.6vw, 42px);
+    background: linear-gradient(135deg, rgba(232, 193, 112, 0.20), rgba(232, 193, 112, 0.08));
+    border: 1px solid rgba(232, 193, 112, 0.58);
+    border-radius: 100px;
+    color: #e8c170;
+    font-size: clamp(12px, 1.6vw, 18px);
+    letter-spacing: 3px;
+    font-weight: 500;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .expo-tag .star {
+    width: 10px;
+    height: 10px;
+    background: #e8c170;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    flex-shrink: 0;
+  }
+
+  /* 金色装饰线（上） */
+  .gold-line {
+    width: clamp(120px, 24vw, 340px);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e8c170, transparent);
+    position: relative;
+  }
+
+  .gold-line::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 7px;
+    height: 7px;
+    background: #e8c170;
+  }
+
+  /* 主文案 */
+  .headline {
+    color: #ffffff;
+    font-size: clamp(32px, 7vw, 92px);
+    font-weight: 900;
+    line-height: 1.22;
+    letter-spacing: clamp(2px, 0.5vw, 6px);
+    text-shadow: 0 4px 32px rgba(0, 0, 0, 0.5), 0 0 60px rgba(232, 193, 112, 0.22);
+  }
+
+  .headline .line-1 {
+    display: block;
+    color: #e8c170;
+    font-size: 0.52em;
+    font-weight: 700;
+    letter-spacing: clamp(6px, 1.4vw, 18px);
+    margin-bottom: clamp(8px, 1.2vh, 18px);
+  }
+
+  /* 辅助说明 */
+  .sub-text {
+    color: rgba(233, 239, 250, 0.94);
+    font-size: clamp(13px, 1.9vw, 22px);
+    line-height: 2.0;
+    letter-spacing: 2px;
+    max-width: 36em;
+  }
+
+  .sub-text .em {
+    color: #e8c170;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(232, 193, 112, 0.5);
+    padding-bottom: 2px;
+  }
+
+  /* 底部 */
+  .footnote {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 2.6vw, 28px);
+    color: rgba(212, 224, 243, 0.85);
+    font-size: clamp(11px, 1.5vw, 16px);
+    letter-spacing: 2.5px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .footnote .sep {
+    width: 4px;
+    height: 4px;
+    background: #e8c170;
+    transform: rotate(45deg);
+    opacity: 0.85;
+    flex-shrink: 0;
+  }
+
+  /* ===== 响应式 ===== */
+  @media (max-width: 768px) {
+    .notice { padding: 5vh 6vw; gap: clamp(12px, 2vh, 24px); }
+    .headline { letter-spacing: 1px; }
+    .sub-text { line-height: 1.9; }
+    .expo-tag { letter-spacing: 2px; padding: 9px 20px; }
+  }
+
+  @media (max-width: 480px) {
+    .headline { font-size: clamp(24px, 8vw, 36px); }
+    .headline .line-1 { font-size: 0.58em; letter-spacing: 4px; margin-bottom: 6px; }
+    .sub-text { font-size: 12.5px; letter-spacing: 1px; line-height: 1.85; }
+    .expo-tag { font-size: 11px; letter-spacing: 1.5px; padding: 8px 16px; }
+    .bg-layer { filter: blur(10px) saturate(1.05) brightness(0.78); }
+    .footnote { font-size: 10.5px; letter-spacing: 1px; gap: 8px 14px; }
+  }
+
+  @media (max-height: 520px) and (orientation: landscape) {
+    .notice { gap: 10px; padding: 3vh 6vw; }
+    .headline { font-size: clamp(22px, 5vw, 44px); }
+    .headline .line-1 { font-size: 0.5em; margin-bottom: 4px; }
+    .sub-text { font-size: clamp(11px, 1.6vw, 16px); line-height: 1.55; }
+    .expo-tag { padding: 6px 16px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 背景虚化层 -->
+<div class="bg-layer"></div>
+<div class="bg-mask"></div>
+<div class="bg-rays"></div>
+
+<!-- 中央通知内容 -->
+<main class="notice" role="main">
+
+  <!-- 金色徽标条 -->
+  <div class="expo-tag">
+    <span class="star"></span>
+    <span>城市生态环境效益智能管控平台</span>
+    <span class="star"></span>
+  </div>
+
+  <!-- 金色装饰线 -->
+  <div class="gold-line"></div>
+
+  <!-- 主文案 -->
+  <h1 class="headline">
+    <span class="line-1">接相关要求</span>
+    进博会期间网站暂停使用
+  </h1>
+
+  <!-- 辅助说明 -->
+  <p class="sub-text">
+    为配合<span class="em">中国国际进口博览会</span>相关工作安排<br>
+    本网站将暂停对外服务，恢复时间另行通知
+  </p>
+
+  <!-- 金色装饰线 -->
+  <div class="gold-line"></div>
+
+  <!-- 底部 -->
+  <div class="footnote">
+    <span>给您带来的不便，敬请谅解</span>
+    <span class="sep"></span>
+    <span>感谢您的理解与支持</span>
+  </div>
+
+</main>
+
+</body>
+</html>

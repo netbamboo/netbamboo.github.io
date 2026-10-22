@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网站暂停使用通知 · 城市生态环境效益智能管控平台</title>
+<!--
+  设计稿 B：科技深蓝风
+  整体配色：深海蓝 #0a1628 / 深蓝 #12294a / 青色高亮 #4fd1c5 / 纯白 #ffffff
+  字体选择：微软雅黑 / 思源黑体，标题 800 字重（大字号），正文 400
+  背景虚化：16px 高斯模糊 + 深蓝渐变遮罩（约 78% 不透明度）+ 网格线纹理
+  文字排版：页面正中央，双居中；主文案置于描边卡片容器内，强化科技感
+  整体视觉：智慧城市、数据大屏、现代科技
+-->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: "Source Han Sans SC", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+    overflow: hidden;
+    background: #0a1628;
+    color: #ffffff;
+  }
+
+  /* ===== 背景层：未来城市夜景 + 强虚化 ===== */
+  .bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: url("assets/city_night_future.jpg") center / cover no-repeat;
+    filter: blur(16px) saturate(1.1) brightness(0.72);
+    transform: scale(1.08);
+  }
+
+  /* 深蓝渐变遮罩 */
+  .bg-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background:
+      linear-gradient(160deg, rgba(10, 22, 40, 0.86) 0%, rgba(18, 41, 74, 0.80) 52%, rgba(10, 22, 40, 0.90) 100%);
+  }
+
+  /* 科技网格纹理 */
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    background-image:
+      linear-gradient(rgba(79, 209, 197, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79, 209, 197, 0.07) 1px, transparent 1px);
+    background-size: 56px 56px;
+    pointer-events: none;
+  }
+
+  /* 角落光晕 */
+  .bg-glow {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    background:
+      radial-gradient(circle at 12% 12%, rgba(79, 209, 197, 0.16) 0%, transparent 40%),
+      radial-gradient(circle at 88% 88%, rgba(56, 132, 255, 0.18) 0%, transparent 44%);
+    pointer-events: none;
+  }
+
+  /* ===== 中央内容区 ===== */
+  .notice {
+    position: relative;
+    z-index: 10;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4vh 6vw;
+    gap: clamp(16px, 2.6vh, 30px);
+  }
+
+  /* 顶部状态标签 */
+  .status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 24px;
+    border: 1px solid rgba(79, 209, 197, 0.55);
+    border-radius: 4px;
+    background: rgba(79, 209, 197, 0.10);
+    color: #4fd1c5;
+    font-size: clamp(12px, 1.5vw, 16px);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .status-tag .pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4fd1c5;
+    box-shadow: 0 0 8px #4fd1c5;
+    animation: pulse 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.82); }
+  }
+
+  /* 主文案卡片容器 */
+  .headline-card {
+    position: relative;
+    padding: clamp(26px, 5vh, 52px) clamp(28px, 6vw, 76px);
+    border: 1px solid rgba(79, 209, 197, 0.38);
+    border-radius: 6px;
+    background: rgba(18, 41, 74, 0.42);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow:
+      0 0 0 1px rgba(79, 209, 197, 0.12),
+      0 22px 60px rgba(0, 0, 0, 0.42),
+      inset 0 0 46px rgba(79, 209, 197, 0.07);
+  }
+
+  /* 卡片四角装饰 */
+  .headline-card::before,
+  .headline-card::after {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #4fd1c5;
+    opacity: 0.85;
+  }
+  .headline-card::before {
+    top: -1px;
+    left: -1px;
+    border-right: none;
+    border-bottom: none;
+  }
+  .headline-card::after {
+    bottom: -1px;
+    right: -1px;
+    border-left: none;
+    border-top: none;
+  }
+
+  .headline {
+    color: #ffffff;
+    font-size: clamp(28px, 5.6vw, 72px);
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: clamp(2px, 0.5vw, 5px);
+    text-shadow: 0 0 34px rgba(79, 209, 197, 0.38);
+  }
+
+  .headline .line-1 {
+    display: block;
+    color: #4fd1c5;
+    font-size: 0.56em;
+    font-weight: 600;
+    letter-spacing: clamp(5px, 1vw, 11px);
+    margin-bottom: clamp(6px, 1vh, 12px);
+    opacity: 0.95;
+  }
+
+  /* 分隔线 */
+  .divider {
+    width: clamp(90px, 15vw, 210px);
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #4fd1c5, transparent);
+  }
+
+  /* 辅助说明 */
+  .sub-text {
+    color: rgba(214, 236, 240, 0.92);
+    font-size: clamp(13px, 1.9vw, 21px);
+    line-height: 1.95;
+    letter-spacing: 1.5px;
+    max-width: 36em;
+  }
+
+  .sub-text .em {
+    color: #4fd1c5;
+    font-weight: 600;
+  }
+
+  /* 底部信息条 */
+  .footnote {
+    display: flex;
+    align-items: center;
+    gap: clamp(14px, 3vw, 32px);
+    color: rgba(178, 210, 218, 0.82);
+    font-size: clamp(11px, 1.4vw, 15px);
+    letter-spacing: 2px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .footnote .item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .footnote .bar {
+    width: 16px;
+    height: 2px;
+    background: #4fd1c5;
+    opacity: 0.75;
+  }
+
+  /* ===== 响应式 ===== */
+  @media (max-width: 768px) {
+    .notice { padding: 5vh 6vw; gap: clamp(12px, 2vh, 22px); }
+    .headline-card {
+      padding: clamp(20px, 4vh, 34px) clamp(18px, 5vw, 32px);
+      width: 100%;
+      max-width: 92vw;
+    }
+    .status-tag { letter-spacing: 2px; padding: 7px 16px; }
+    .headline { letter-spacing: 1px; }
+    .bg-grid { background-size: 40px 40px; }
+  }
+
+  @media (max-width: 480px) {
+    .headline { font-size: clamp(22px, 7vw, 32px); }
+    .headline .line-1 { font-size: 0.62em; letter-spacing: 3px; }
+    .sub-text { font-size: 12.5px; letter-spacing: 0.5px; line-height: 1.85; }
+    .footnote { gap: 6px 18px; font-size: 10.5px; letter-spacing: 1px; }
+    .bg-layer { filter: blur(11px) saturate(1.05) brightness(0.72); }
+  }
+
+  @media (max-height: 520px) and (orientation: landscape) {
+    .notice { gap: 10px; padding: 3vh 6vw; }
+    .headline-card { padding: 16px 30px; }
+    .headline { font-size: clamp(20px, 4.2vw, 38px); }
+    .headline .line-1 { font-size: 0.54em; margin-bottom: 4px; }
+    .sub-text { font-size: clamp(11px, 1.6vw, 15px); line-height: 1.55; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 背景虚化层 -->
+<div class="bg-layer"></div>
+<div class="bg-mask"></div>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<!-- 中央通知内容 -->
+<main class="notice" role="main">
+
+  <!-- 状态标签 -->
+  <div class="status-tag">
+    <span class="pulse"></span>
+    <span>SYSTEM NOTICE / 系统通知</span>
+  </div>
+
+  <!-- 主文案卡片 -->
+  <div class="headline-card">
+    <h1 class="headline">
+      <span class="line-1">接相关要求</span>
+      进博会期间网站暂停使用
+    </h1>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 辅助信息 -->
+  <p class="sub-text">
+    配合<span class="em">中国国际进口博览会</span>相关工作安排<br>
+    平台服务临时暂停，恢复时间将通过官方渠道另行发布
+  </p>
+
+  <!-- 底部信息条 -->
+  <div class="footnote">
+    <div class="item"><span class="bar"></span><span>服务暂停期间系统数据将妥善保存</span></div>
+    <div class="item"><span class="bar"></span><span>给您带来不便敬请谅解</span></div>
+  </div>
+
+</main>
+
+</body>
+</html>
